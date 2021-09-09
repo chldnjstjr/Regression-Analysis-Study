@@ -204,6 +204,97 @@ system.time(MyFunction(4))
 
 ### 2.7. An example: maximum likelihood estimation (MLE)
 ```{r}
+prob <- 0.7 
+set.seed(20210302)
+mydata <- rbinom(100, 1, prob)
 
+BinomLogLik <- function(data, prob){
+  result <- 0
+  for (i in 1:length(data)){
+    result <- result + (data[i]*log(prob))+(1-data[i])*log(1-prob)
+  }
+  return(result)
+}
+
+optim(par=0.5, fn=BinomLogLik, data=mydata,
+      method = "Brent", lower = 0, upper = 1, control = list(fnscale=-1))
+
+mean(mydata)
+hist(mydata)
+
+param <- seq(0.01, 1, length.out=98)
+
+#par(family = "sans") #the default font setting of R base graphics 
+plot(param, BinomLogLik(mydata, param), type="l", col="blue", lwd=2,
+     main="plot of Total Log=Likehood", xlab="success probability", ylab="total log-likelihood")
+```
+
+
+### 3. A Simple Example of Data Wrangling
+
+readxl and lattice packages are called upon below and hence readxl and lattice packages should be installed once
+```{r}
+#only when the two packages are not installed yet, then execute the following line!
+install.packages(c("readxl","lattice"))
+```
+
+The two zipped data files should be unzipped to the folder
+
+read the first data file in, using read.table()
+```{r}
+#when header = TRUE is set
+macro.data <- read.table("/Volumes/GoogleDrive/내 드라이브/한양대 강의/2021-2/계량경제이론/dataset/datasets_for_Greene7th/TableF3-1.txt", header=TRUE)
+
+head(macro.data)
+
+bank.wage.data <- readxl::read_excel("/Volumes/GoogleDrive/내 드라이브/한양대 강의/2021-2/계량경제이론/dataset/datasets_for_Heij/chapter1/xls/xr113bwa.xls", sheet=1)
+
+bank.wage.data[] #print the data frame (up to the default maximum lines)
+
+View(bank.wage.data)
+str(bank.wage.data) #Get structure of a data frame, including the class(type) of all variables, using 'str()'
+names(bank.wage.data)
+colnames(bank.wage.data) #names와 같음
+head(bank.wage.data)
+summary(bank.wage.data)
+
+#returns data frame (designated rows and all columns)
+bank.wage.data[1:5,] #1~5행까지, 열은 모두 호출
+
+#returns data frame(all rows and 2 designated columns)
+bank.wage.data[,c("SALARY", "EDUC")] #salary와 educ 열의 모든 행 호출
+
+#returns a vector (1 designated column)
+bank.wage.data[, "SALARY"]
+
+#returns data frame (all rows and 1 designated column)
+bank.wage.data[, "SALARY", drop=FALSE]
+bank.wage.data["SALARY"]
+
+#returns data frame (5 designated rows and 2 designated columns)
+bank.wage.data[1:5, c("SALARY", "EDUC")]
+
+#Summary statistics of individual variables, using mean(), median(), sd(), range(), max(), min(), quantile()
+
+mean(bank.wage.data$SALARY)
+which.max(bank.wage.data$SALARY)
+cor(bank.wage.data$SALARY, bank.wage.data$EDUC)
+
+#sample correlation coefficient matrix, using cor()
+cor(bank.wage.data[c("SALARY", "EDUC")]) #칼럼명을 이렇게 지정해도 되고
+cor(bank.wage.data[,2:3]) #칼럼의 index로 해도되고
+
+#Time series plot, using ts() and plot()
+#par(family="sans) #the default font setting of R base graphics
+plot(ts(macro.data$GNP, start = macro.data[1, "Year"], frequency = 1),
+     main="time series plot of GNP", xlab="year", ylab="GNP")
+
+#scatter diagram, using plot()
+#A single scatter diagram, using R internal
+#par(family="sans") #the default font setting of R base graphics
+plot(SALARY~EDUC, data=bank.wage.data, main="scatter plot of salary and education", ylab="salary", xalab="education")
 
 ```
+
+
+
