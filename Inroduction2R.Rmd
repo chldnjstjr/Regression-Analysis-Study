@@ -297,4 +297,51 @@ plot(SALARY~EDUC, data=bank.wage.data, main="scatter plot of salary and educatio
 ```
 
 
+```{r}
+#scatter diagram with lines added, using plot() and lines()
+#a single scatter diagram with points connected by solid lines, using R internal 
+#par(family = "sans") #the default font setting of R base graphics
+plot(SALARY ~ EDUC, data=bank.wage.data, main="scatter plot of salary and education", ylab="salary", xlab="education")
+```
+
+```{r}
+bank.wage.data2 <- readxl::read_excel("/Volumes/GoogleDrive/내 드라이브/한양대 강의/2021-2/계량경제이론/dataset/datasets_for_Heij/chapter3/xls/xm301bwa.XLS", sheet=1)
+names(bank.wage.data2)
+
+#scatter diagram, using lattice::xylot() - The lattice package is installed automatically and is a part of System Library. 
+
+lattice::xyplot(SALARY ~ EDUC, data=bank.wage.data2, main="scatter plot of salary and education", ylab="salary", xlab="ducation")
+
+lattice::xyplot(LOGSAL~EDUC+LOGSALBEGIN, data=bank.wage.data2, main="scatter plot of ln(salary) against ducation and ln(beginning salary)", ylab="ln(salary)", xlab="education and ln(beginning salary)")
+
+
+#frequency table of a cateogorical variable, using table()
+table(bank.wage.data2$EDUC)
+
+#bar chart displaying frequencies or relative frequences, using barplot() in the R internal
+barplot(table(bank.wage.data2$EDUC), border="dark blue", main="bar chart of education", xlab="education", ylab="frequency")
+
+barplot(table(bank.wage.data2$EDUC)/length(bank.wage.data2$EDUC), border="dark blue", main="bar chart of education", xlab="education", ylab="relative frequency")
+
+#using frequencies
+hist(bank.wage.data2$SALARY, main="histogram of salary", xlab="salary", ylab = "frequency")
+hist(bank.wage.data2$SALARY, col = "orange", main="histogram of salary", xlab="salary", ylab="frequency")
+
+#using relative frequencies (or density)
+hist(bank.wage.data2$SALARY, col="grey", freq = FALSE, main="histogram of salary", xlab="salary", ylab="relative frequency")
+
+#density function, using density() in the R internal
+SALARY.density <- density(bank.wage.data2$SALARY)
+plot(SALARY.density, main="density function", xlab="salary", ylab="density")
+
+#multiple scatter diagrams, using plot() in the R internal
+plot(bank.wage.data2[,c(3,5,6)])
+
+#how to save a plot in pdf format, using dev.copy() and dev.off()
+lattice::xyplot(LOGSAL~EDUC + LOGSALBEGIN, data=bank.wage.data2, main="Scatter plot of log(SALARY) on EDUC and log(SALARYBEGIN)", xlab="EDUC, log(SALARYBEGIN)", ylab="log(SALARY)")
+
+```
+
+
+
 
